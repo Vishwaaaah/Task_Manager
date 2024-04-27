@@ -25,13 +25,12 @@ The server provides several routes for managing tasks, implemented in `Task_Mana
 
 The logic for handling these routes is implemented in `Task_Manager/server/controllers/taskController.js`.
 
-
+## Running the Application
 To run the server-side of the application, navigate to the Task_Manager/server directory and run the following command:
-```
+```sh
 node index.js
 ```
 
-## Running the Application
 To run the client-side of the application, navigate to the `Task_Manager/client` directory and run the following command:
 
 ```sh
