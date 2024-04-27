@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const uniqueValidator = require('mongoose-unique-validator');
 require('dotenv').config();
 
 const UserSchema = new mongoose.Schema({
@@ -41,6 +42,8 @@ UserSchema.pre('save', async function (next) {
 
     next();
 });
+
+UserSchema.plugin(uniqueValidator);
 
 UserSchema.methods.generateAuthToken = async function () {
     const user = this;

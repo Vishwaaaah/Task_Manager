@@ -1,24 +1,38 @@
 const Task = require('../models/Task');
 const bcrypt = require('bcryptjs');
 const upload = require('../middleware/multer');
+const jwt = require('jsonwebtoken');
+const dotenv = require('dotenv');
 
 exports.upload = upload.single('file');
  
 
 // create task
 exports.createTask = async (req, res) => {
-  try {
-    const task = new Task(req.body);
-    await task.save();
-    res.status(201).send(task);
-  } catch (e) {
-    res.status(400).send(e);
+    try {
+      const token = req.header('Authorization').replace('Bearer ', '');
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      const userRef = decoded._id;
+  
+      const task = new Task({
+        ...req.body,
+        owner: userRef,
+      });
+  
+      await task.save();
+      res.status(201).send(task);
+    } catch (e) {
+      res.status(400).send(e);
     }   
-}
+  }
 
 exports.getAllTasks = async (req, res) => {
     try {
-        const tasks = await Task.find({});
+        const token = req.header('Authorization').replace('Bearer ', '');
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        const userId = decoded._id;
+
+        const tasks = await Task.find({ owner: userId });
         res.send(tasks);
     } catch (e) {
         res.status(500).send();
